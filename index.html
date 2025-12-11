@@ -5,134 +5,69 @@
 <title>Before 2025 Ends</title>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; }
 
 /* 🌌 Background */
-body {
-  height: 100vh;
-  overflow: hidden;
-  background: radial-gradient(circle at bottom, #141414 0%, #000 70%);
-  color: white;
-}
+body { height: 100vh; overflow: hidden; background: radial-gradient(circle at bottom, #141414 0%, #000 70%); color: white; }
 
 /* 📝 Center content */
-.container {
-  position: absolute;
-  top: 36%;
-  width: 100%;
-  text-align: center;
-  z-index: 10;
-}
-
-h1 {
-  font-weight: 500;
-  opacity: 0.9;
-}
-
-textarea {
-  width: 330px;
-  height: 90px;
-  margin-top: 18px;
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  resize: none;
-  font-size: 14px;
-}
-
-button {
-  margin-top: 14px;
-  padding: 10px 26px;
-  border-radius: 22px;
-  border: none;
-  cursor: pointer;
-  background: #ffcc77;
-  color: #000;
-  font-weight: 500;
-}
+.container { position: absolute; top: 36%; width: 100%; text-align: center; z-index: 10; }
+h1 { font-weight: 500; opacity: 0.9; }
+textarea { width: 330px; height: 90px; margin-top: 18px; padding: 10px; border-radius: 10px; border: none; resize: none; font-size: 14px; }
+button { margin-top: 14px; padding: 10px 26px; border-radius: 22px; border: none; cursor: pointer; background: #ffcc77; color: #000; font-weight: 500; }
 
 /* 🎵 Audio controls */
-.audio-controls {
-  position: fixed;
-  bottom: 60px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  opacity: 0.6;
-  z-index: 20;
-}
-
-.audio-controls button {
-  font-size: 18px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: white;
-}
-
-.audio-controls input[type="range"] {
-  width: 130px;
-}
+.audio-controls { position: fixed; bottom: 60px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; opacity: 0.6; z-index: 20; }
+.audio-controls button { font-size: 18px; background: none; border: none; cursor: pointer; color: white; }
+.audio-controls input[type="range"] { width: 130px; }
 
 /* 🏮 Lantern */
-.lantern {
-  position: absolute;
-  bottom: -40px;
-  width: 18px;
-  height: 24px;
-  border-radius: 50%;
-  background: #ffcc66;
-  opacity: 0.9;
-  animation-timing-function: linear, ease-in-out;
-}
+.lantern { position: absolute; bottom: -40px; width: 18px; height: 24px; border-radius: 50%; background: #ffcc66; opacity: 0.9; animation-timing-function: linear, ease-in-out; }
 
 /* 🎈 Float upward */
 @keyframes floatUp {
-  from {
-    transform: translateX(0) translateY(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateX(var(--drift)) translateY(-120vh);
-    opacity: 0;
-  }
+  from { transform: translateX(0) translateY(0); opacity: 1; }
+  to { transform: translateX(var(--drift)) translateY(-120vh); opacity: 0; }
 }
 
 /* 💫 Glow pulse (music tempo) */
 @keyframes glowPulse {
-  0% {
-    box-shadow:
-      0 0 6px rgba(255,200,100,0.4),
-      0 0 12px rgba(255,160,80,0.2);
-  }
-  50% {
-    box-shadow:
-      0 0 14px rgba(255,230,150,0.8),
-      0 0 34px rgba(255,180,90,0.6);
-  }
-  100% {
-    box-shadow:
-      0 0 6px rgba(255,200,100,0.4),
-      0 0 12px rgba(255,160,80,0.2);
-  }
+  0% { box-shadow: 0 0 6px rgba(255,200,100,0.4), 0 0 12px rgba(255,160,80,0.2); }
+  50% { box-shadow: 0 0 14px rgba(255,230,150,0.8), 0 0 34px rgba(255,180,90,0.6); }
+  100% { box-shadow: 0 0 6px rgba(255,200,100,0.4), 0 0 12px rgba(255,160,80,0.2); }
+}
+
+/* 🫧 Lantern message bubble (fades) */
+.lantern-message {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 240px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  line-height: 1.2;
+  color: #fff;
+  background: rgba(20,20,20,0.6);
+  backdrop-filter: blur(2px);
+  text-align: center;
+  opacity: 0.9;
+  pointer-events: none;
+  animation: messageFloat 6s ease-out forwards;
+  box-shadow: 0 0 8px rgba(255,200,100,0.35);
+}
+@keyframes messageFloat {
+  0%   { transform: translate(-50%, 0); opacity: 0; }
+  10%  { opacity: 0.9; }
+  80%  { transform: translate(-50%, -40px); opacity: 0.9; }
+  100% { transform: translate(-50%, -60px); opacity: 0; }
 }
 
 /* 📜 Credits with glow */
 .credits {
-  position: fixed;
-  bottom: 10px;
-  width: 100%;
-  text-align: center;
-  font-size: 12px;
-  color: #ffcc77;
-  opacity: 0.8;
+  position: fixed; bottom: 10px; width: 100%; text-align: center; font-size: 12px;
+  color: #ffcc77; opacity: 0.8;
   text-shadow: 0 0 6px rgba(255,200,100,0.6), 0 0 12px rgba(255,160,80,0.4);
   animation: glowPulse 3s ease-in-out infinite;
 }
@@ -160,7 +95,29 @@ button {
   Music: C418 – Subwoofer Lullaby · Webpage idea & creation: PandaHung143
 </div>
 
-<script>
+<!-- 🔥 App logic + Firebase (module) -->
+<script type="module">
+/* ---------- Firebase setup ---------- */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, addDoc, collection, onSnapshot, serverTimestamp, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB8zL977IZcxN0Fvs1fehLtGko4B85z3JI",
+  authDomain: "lantern-site.firebaseapp.com",
+  projectId: "lantern-site",
+  storageBucket: "lantern-site.appspot.com",
+  messagingSenderId: "551494553450",
+  appId: "1:551494553450:web:d26588c63cf3ec397c1f13",
+  measurementId: "G-ZECV8QC6X8"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const db = getFirestore(app);
+
+/* ---------- UI refs ---------- */
 const audio = document.getElementById("bg-music");
 const volumeSlider = document.getElementById("volumeSlider");
 const muteBtn = document.getElementById("muteBtn");
@@ -170,27 +127,20 @@ const textarea = document.querySelector("textarea");
 let unlocked = false;
 let typingTimeout;
 
-// Force audio to load early
+/* ---------- Audio behavior ---------- */
 audio.load();
 
-// Fade-in helper
 function fadeInMusic(targetVolume = 0.5, duration = 4000) {
   let current = 0;
   const step = targetVolume / (duration / 50);
   audio.volume = 0;
-
   const fade = setInterval(() => {
     current += step;
-    if (current >= targetVolume) {
-      audio.volume = targetVolume;
-      clearInterval(fade);
-    } else {
-      audio.volume = current;
-    }
+    if (current >= targetVolume) { audio.volume = targetVolume; clearInterval(fade); }
+    else { audio.volume = current; }
   }, 50);
 }
 
-// Unlock audio on first click/tap
 document.addEventListener("click", () => {
   if (!unlocked) {
     audio.play().catch(() => {});
@@ -200,77 +150,37 @@ document.addEventListener("click", () => {
   }
 }, { once: true });
 
-// Volume slider
 volumeSlider.addEventListener("input", () => {
   audio.volume = volumeSlider.value / 100;
   muteBtn.textContent = audio.volume === 0 ? "🔇" : "🔊";
 });
 
-// Mute toggle
 muteBtn.addEventListener("click", () => {
-  if (audio.volume > 0) {
-    audio.volume = 0;
-    muteBtn.textContent = "🔇";
-  } else {
-    audio.volume = volumeSlider.value / 100;
-    muteBtn.textContent = "🔊";
-  }
+  if (audio.volume > 0) { audio.volume = 0; muteBtn.textContent = "🔇"; }
+  else { audio.volume = volumeSlider.value / 100; muteBtn.textContent = "🔊"; }
 });
 
-// Lower volume while typing
 textarea.addEventListener("input", () => {
   const normal = volumeSlider.value / 100;
   audio.volume = Math.min(normal, 0.15);
-
   clearTimeout(typingTimeout);
-  typingTimeout = setTimeout(() => {
-    audio.volume = volumeSlider.value / 100;
-  }, 1200);
+  typingTimeout = setTimeout(() => { audio.volume = volumeSlider.value / 100; }, 1200);
 });
 
-// Lantern creation
-function createLantern() {
+window.addEventListener("beforeunload", () => {
+  let current = audio.volume;
+  const step = current / (1000 / 50);
+  const fade = setInterval(() => {
+    current -= step;
+    if (current <= 0) { audio.volume = 0; clearInterval(fade); }
+    else { audio.volume = current; }
+  }, 50);
+});
+
+/* ---------- Lanterns ---------- */
+function createLantern(messageText = "") {
   const lantern = document.createElement("div");
   lantern.className = "lantern";
 
   const x = Math.random() * window.innerWidth;
-  const drift = (Math.random() * 120 - 60) + "px";
-  const duration = Math.random() * 6 + 9;
-  const pulse = (Math.random() * 0.6 + 1.8).toFixed(2);
-
-  lantern.style.left = `${x}px`;
-  lantern.style.setProperty("--drift", drift);
-  lantern.style.animation = `
-    floatUp ${duration}s linear forwards,
-    glowPulse ${pulse}s ease-in-out infinite
-  `;
-
-  document.body.appendChild(lantern);
-  setTimeout(() => lantern.remove(), duration * 1000);
-}
-
-sendBtn.addEventListener("click", () => {
-  if (!textarea.value.trim()) return;
-  createLantern();
-  textarea.value = "";
-});
-
-// Fade-out when leaving the page
-window.addEventListener("beforeunload", () => {
-  let current = audio.volume;
-  const step = current / (1000 / 50); // fade out over ~1s
-
-  const fade = setInterval(() => {
-    current -= step;
-    if (current <= 0) {
-      audio.volume = 0;
-      clearInterval(fade);
-    } else {
-      audio.volume = current;
-    }
-  }, 50);
-});
-</script>
-
-</body>
-</html>
+  const drift = (Math.random()
