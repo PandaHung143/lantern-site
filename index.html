@@ -111,7 +111,6 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const db = getFirestore(app); 
 
 /* ---------- UI refs ---------- */
@@ -183,3 +182,4 @@ function createLantern(messageText = "") {
   const drift = (Math.random() * 120 - 60) + "px";
 
   const duration = Math.random
+
