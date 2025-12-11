@@ -63,7 +63,7 @@ button { margin-top: 14px; padding: 10px 26px; border-radius: 22px; border: none
   80%  { transform: translate(-50%, -40px); opacity: 0.9; }
   100% { transform: translate(-50%, -60px); opacity: 0; }
 }
-
+  
 /* 📜 Credits with glow */
 .credits {
   position: fixed; bottom: 10px; width: 100%; text-align: center; font-size: 12px;
@@ -112,6 +112,7 @@ const firebaseConfig = {
   measurementId: "G-ZECV8QC6X8"
 };
 
+/*why was not added*/
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
@@ -184,3 +185,4 @@ function createLantern(messageText = "") {
 
   const x = Math.random() * window.innerWidth;
   const drift = (Math.random()
+
