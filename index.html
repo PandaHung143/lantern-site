@@ -59,7 +59,7 @@ button {
 /* 🎵 Audio controls */
 .audio-controls {
   position: fixed;
-  bottom: 20px;
+  bottom: 60px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -123,6 +123,19 @@ button {
       0 0 12px rgba(255,160,80,0.2);
   }
 }
+
+/* 📜 Credits with glow */
+.credits {
+  position: fixed;
+  bottom: 10px;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  color: #ffcc77;
+  opacity: 0.8;
+  text-shadow: 0 0 6px rgba(255,200,100,0.6), 0 0 12px rgba(255,160,80,0.4);
+  animation: glowPulse 3s ease-in-out infinite;
+}
 </style>
 </head>
 
@@ -142,57 +155,45 @@ button {
   <input id="volumeSlider" type="range" min="0" max="100" value="50">
 </div>
 
+<!-- 📜 Credits -->
+<div class="credits">
+  Music: C418 – Subwoofer Lullaby · Webpage idea & creation: PandaHung143
+</div>
+
 <script>
 const audio = document.getElementById("bg-music");
+const volumeSlider = document.getElementById("volumeSlider");
+const muteBtn = document.getElementById("muteBtn");
+const sendBtn = document.getElementById("sendBtn");
+const textarea = document.querySelector("textarea");
+
+let unlocked = false;
+let typingTimeout;
 
 // Force audio to load early
 audio.load();
 
-// Unlock audio on first click or tap
-function enableAudioOnce() {
-  audio.volume = 0;
-  audio.play().then(() => {
-    // fade in
-    let v = 0;
-    const fade = setInterval(() => {
-      if (v < 0.5) {
-        v += 0.01;
-        audio.volume = v;
-      } else {
-        clearInterval(fade);
-      }
-    }, 100);
-  });
-  window.removeEventListener("click", enableAudioOnce);
-  window.removeEventListener("touchstart", enableAudioOnce);
-}
-
-// Attach unlock events
-window.addEventListener("click", enableAudioOnce);
-window.addEventListener("touchstart", enableAudioOnce);
-</script>
-
-// ---------- 🎶 Fade-in Music ----------
+// Fade-in helper
 function fadeInMusic(targetVolume = 0.5, duration = 4000) {
   let current = 0;
   const step = targetVolume / (duration / 50);
-  music.volume = 0;
+  audio.volume = 0;
 
   const fade = setInterval(() => {
     current += step;
     if (current >= targetVolume) {
-      music.volume = targetVolume;
+      audio.volume = targetVolume;
       clearInterval(fade);
     } else {
-      music.volume = current;
+      audio.volume = current;
     }
   }, 50);
 }
 
-// Unlock audio on first interaction (browser-safe)
+// Unlock audio on first click/tap
 document.addEventListener("click", () => {
   if (!unlocked) {
-    music.play().catch(() => {});
+    audio.play().catch(() => {});
     fadeInMusic(volumeSlider.value / 100);
     unlocked = true;
     muteBtn.textContent = "🔊";
@@ -201,39 +202,33 @@ document.addEventListener("click", () => {
 
 // Volume slider
 volumeSlider.addEventListener("input", () => {
-  music.volume = volumeSlider.value / 100;
-  muteBtn.textContent = music.volume === 0 ? "🔇" : "🔊";
+  audio.volume = volumeSlider.value / 100;
+  muteBtn.textContent = audio.volume === 0 ? "🔇" : "🔊";
 });
 
 // Mute toggle
 muteBtn.addEventListener("click", () => {
-  if (music.volume > 0) {
-    music.volume = 0;
+  if (audio.volume > 0) {
+    audio.volume = 0;
     muteBtn.textContent = "🔇";
   } else {
-    music.volume = volumeSlider.value / 100;
+    audio.volume = volumeSlider.value / 100;
     muteBtn.textContent = "🔊";
   }
 });
 
-// ---------- ✍️ Lower volume while typing ----------
+// Lower volume while typing
 textarea.addEventListener("input", () => {
   const normal = volumeSlider.value / 100;
-  music.volume = Math.min(normal, 0.15);
+  audio.volume = Math.min(normal, 0.15);
 
   clearTimeout(typingTimeout);
   typingTimeout = setTimeout(() => {
-    music.volume = volumeSlider.value / 100;
+    audio.volume = volumeSlider.value / 100;
   }, 1200);
 });
 
-// ---------- 🏮 Create lantern ----------
-sendBtn.addEventListener("click", () => {
-  if (!textarea.value.trim()) return;
-  createLantern();
-  textarea.value = "";
-});
-
+// Lantern creation
 function createLantern() {
   const lantern = document.createElement("div");
   lantern.className = "lantern";
@@ -253,8 +248,29 @@ function createLantern() {
   document.body.appendChild(lantern);
   setTimeout(() => lantern.remove(), duration * 1000);
 }
+
+sendBtn.addEventListener("click", () => {
+  if (!textarea.value.trim()) return;
+  createLantern();
+  textarea.value = "";
+});
+
+// Fade-out when leaving the page
+window.addEventListener("beforeunload", () => {
+  let current = audio.volume;
+  const step = current / (1000 / 50); // fade out over ~1s
+
+  const fade = setInterval(() => {
+    current -= step;
+    if (current <= 0) {
+      audio.volume = 0;
+      clearInterval(fade);
+    } else {
+      audio.volume = current;
+    }
+  }, 50);
+});
 </script>
 
 </body>
 </html>
-
