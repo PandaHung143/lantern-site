@@ -111,7 +111,8 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app); 
+const analytics = getAnalytics(app);
+const db = getFirestore(app);
 
 /* ---------- UI refs ---------- */
 const audio = document.getElementById("bg-music");
@@ -180,7 +181,57 @@ function createLantern(messageText = "") {
 
   const x = Math.random() * window.innerWidth;
   const drift = (Math.random() * 120 - 60) + "px";
+  const duration = Math.random() * 6 + 9;
+  const pulse = (Math.random() * 0.6 + 1.8).toFixed(2);
 
-  const duration = Math.random
+  lantern.style.left = `${x}px`;
+  lantern.style.setProperty("--drift", drift);
+  lantern.style.animation = `
+    floatUp ${duration}s linear forwards,
+    glowPulse ${pulse}s ease-in-out infinite
+  `;
 
+  if (messageText) {
+    const bubble = document.createElement("div");
+    bubble.className = "lantern-message";
+    bubble.textContent = messageText;
+    lantern.appendChild(bubble);
+  }
 
+  document.body.appendChild(lantern);
+  setTimeout(() => lantern.remove(), duration * 1000);
+}
+
+/* ---------- Send + store message ---------- */
+sendBtn.addEventListener("click", async () => {
+  const text = textarea.value.trim();
+  if (!text) return;
+
+  const message = text.slice(0, 200);
+
+  try {
+    await addDoc(collection(db, "lanterns"), {
+      message,
+      createdAt: serverTimestamp()
+    });
+    textarea.value = "";
+  } catch (e) {
+    console.error("Failed to send:", e);
+  }
+});
+
+/* ---------- Realtime stream ---------- */
+const q = query(collection(db, "lanterns"), orderBy("createdAt", "desc"), limit(50));
+
+onSnapshot(q, (snapshot) => {
+  snapshot.docChanges().forEach((change) => {
+    if (change.type === "added") {
+      const data = change.doc.data();
+      const msg = typeof data.message === "string" ? data.message : "";
+      createLantern(msg);
+    }
+  });
+});
+</script>
+</body>
+</html>
