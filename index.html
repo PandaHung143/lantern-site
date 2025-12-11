@@ -145,14 +145,34 @@ button {
 </div>
 
 <script>
-const sendBtn = document.getElementById("sendBtn");
-const textarea = document.querySelector("textarea");
-const music = document.getElementById("bgMusic");
-const volumeSlider = document.getElementById("volumeSlider");
-const muteBtn = document.getElementById("muteBtn");
+const audio = document.getElementById("bg-music");
 
-let unlocked = false;
-let typingTimeout;
+// Force audio to load early
+audio.load();
+
+// Unlock audio on first click or tap
+function enableAudioOnce() {
+  audio.volume = 0;
+  audio.play().then(() => {
+    // fade in
+    let v = 0;
+    const fade = setInterval(() => {
+      if (v < 0.5) {
+        v += 0.01;
+        audio.volume = v;
+      } else {
+        clearInterval(fade);
+      }
+    }, 100);
+  });
+  window.removeEventListener("click", enableAudioOnce);
+  window.removeEventListener("touchstart", enableAudioOnce);
+}
+
+// Attach unlock events
+window.addEventListener("click", enableAudioOnce);
+window.addEventListener("touchstart", enableAudioOnce);
+</script>
 
 // ---------- 🎶 Fade-in Music ----------
 function fadeInMusic(targetVolume = 0.5, duration = 4000) {
